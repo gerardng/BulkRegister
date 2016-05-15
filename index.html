@@ -1,0 +1,223 @@
+<!--Bulk Register HTML by Gerard Ng COMP 3920 Project-->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Bulk Register</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+
+<script type="text/javascript" src="bulkRegisterJquery.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+<script type="text/javascript">
+    var reader; //GLOBAL File Reader object
+    var linesArray=new Array;
+    var wordsArray=new Array;
+    var output = "";
+
+    /**
+     * Check API Support
+     */
+    function checkFileAPI() {
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            reader = new FileReader();
+            return true; 
+        } else {
+            alert('The File APIs are not fully supported by your browser. Fallback required.');
+            return false;
+        }
+    }
+
+    /**
+     * Read Text Input
+     */
+    function readText(filePath) {
+        if(filePath.files && filePath.files[0]) {           
+            reader.onload = function (e) {
+                output = e.target.result;
+                displayContents(output);
+                //processLineByLine(output);
+            };//end onload()
+            reader.readAsText(filePath.files[0]);
+        }
+        else {
+            return false;
+        }       
+        return true;
+    }   
+
+    /**
+     * Display all contents
+     */
+    function displayContents(inputFile) {
+        var outputDiv = document.getElementById('output'); 
+        linesArray = inputFile.split(/\n+/);
+        outputDiv.innerHTML = linesArray[0].fontsize(0.5); 
+        
+        var outputDiv = document.getElementById('output2'); 
+        outputDiv.innerHTML = inputFile; 
+    }  
+
+    /**
+     * Display line by line
+     */
+    function processLineByLine() {
+        linesArray = output.split(/\n+/);
+        for(var i = 0; i < linesArray.length; i++){
+            // process linesArray[i];
+            wordsArray = linesArray[i].split(/\s+/);
+            // we now have a new wordsArray[] to be used
+
+            // wordsArray[0] is the first word
+            // wordsArray[1] is the second word
+            // put Ajax call here using above variables
+            //bulkRegister();
+            var currentEmail;
+            var curretSet;
+            var currentfname;
+            var currentlname;
+            currentEmail = wordsArray[0];
+            currentSet = wordsArray[1];
+            currentfname = wordsArray[2];
+            currentlname = wordsArray[3];
+            if(/[A-Za-z0-9._%+-]+\@my\.bcit\.ca$/.test(currentEmail) ) {
+                    CallAjax(currentEmail, currentSet, currentfname, currentlname);
+                } 
+
+            for(var j = 0; j < wordsArray.length; j++){
+                // any further processing wordsArray[j];
+            }
+
+        // some print statements for demo
+        document.getElementById('line0').innerHTML = linesArray[0];
+        document.getElementById('word0').innerHTML = wordsArray[0];
+        document.getElementById('word1').innerHTML = wordsArray[1];
+        document.getElementById('word2').innerHTML = wordsArray[2];
+        document.getElementById('word3').innerHTML = wordsArray[3];
+        document.getElementById('line1').innerHTML = linesArray[1];
+        document.getElementById('line2').innerHTML = linesArray[2];
+        }
+    } 
+
+    // data bin
+    function databin() {
+        document.getElementById("output").style.fontSize = "xx-small";
+        var dataDump = document.getElementsByClassName("splash");
+        dataDump.style.height = "500px";
+    }
+
+
+
+</script>
+</head>
+<body onload="checkFileAPI();">
+
+<div class="header">
+    <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+        <a class="pure-menu-heading" href="">Bulk Registration</a>
+
+        <ul class="pure-menu-list">
+            <!-- pure-menu-selected -->
+            <li class="pure-menu-item "><a href="http://bcit.ca" class="pure-menu-link"> BCIT </a></li>
+            <li class="pure-menu-item"><a href="http://3920project.azurewebsites.net/" class="pure-menu-link">Web API</a></li>
+            <li class="pure-menu-item"><a href="https://github.com/byu777/comp3920" class="pure-menu-link">Github</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="splash-container">
+    <div class="splash">
+        <h1 class="splash-head" id="output" onchange="databin()">Data Bin</h1>
+                    <br>
+                    <input type="file" name="file-1[]" id="file-1" class="inputfile inputfile-1" onchange='readText(this)' data-multiple-caption="{count} files selected" multiple />
+                    <label for="file-1"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> <span>Upload&hellip;</span></label><br><br>
+        <p class="splash-subhead">
+            <!-- subheading here -->
+        </p>
+        <div onclick="processLineByLine()">
+            <button class="button" style="vertical-align:middle"><span>$Ajax </span></button>
+        </div>
+    </div>
+</div>
+
+<div class="content-wrapper">
+<!-- Whitespace -->
+    <div class="content"><h3 class="content-head is-center">COMP 3920 Set 3C Open House Project by Gerard Ng.</h3></div>
+
+<!-- Raw input file -->
+    <div class="ribbon l-box-lrg pure-g">
+        <div class="l-box-lrg is-center pure-u-1 pure-u-md-1-2 pure-u-lg-2-5">
+            <img class="pure-img-responsive" alt="File Icons" width="300" src="img/common/file-icons.png">
+        </div>
+        <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-3-5">
+
+            <h2 class="content-head content-head-ribbon">Raw Input File</h2>
+
+            <div id="output2">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor.
+            </div>
+        </div>
+    </div>
+
+<!-- Tokenized input -->
+    <div class="content">
+        <h2 class="content-head is-center">Tokenizing the Input File</h2>
+
+        <div class="pure-g">
+            <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+
+                <h3 class="content-subhead">
+                    <i class="fa fa-rocket"></i>
+                    Processing Line by Line (Previewing the first 3 lines)
+                </h3>
+                <div id="line0">First Line</div>
+                <div id="line1">Second Line</div>
+                <div id="line2">Third Line</div>
+            </div>
+            <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+                <h3 class="content-subhead">
+                    <i class="fa fa-mobile"></i>
+                    Current Token being processed
+                </h3>
+                <div id="word0">Email</div>
+                <div id="word1">Section Set</div>
+                <div id="word2">First Name</div>
+                <div id="word3">Last Name</div>
+            </div>
+            <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+                <h3 class="content-subhead">
+                    <i class="fa fa-th-large"></i>
+                    Recursive Iterations
+                </h3>
+                <p>
+                    Input is split into strings which are then further tokenized into words
+                </p>
+            </div>
+            <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+                <h3 class="content-subhead">
+                    <i class="fa fa-check-square-o"></i>
+                    Restful Calls
+                </h3>
+                <p>
+                    Each token is placed into a variable to build a URL string to be passed onto the web api
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="content">
+        <h2 class="content-head is-center">Created in conjunction with Student Meetup App</h2>
+    
+    <div class="footer l-box is-center">
+        Website powered by PureCSS, Monster Energy Drinks and G's Braincells
+    </div>
+
+</div>
+
+</body>
+</html>
